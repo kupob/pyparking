@@ -172,7 +172,7 @@ class Detector:
                     cv2.putText(rgb_image, f"SPACE AVAILABLE!", (10, 150), font, 3.0, (0, 255, 0), 2, cv2.FILLED)
 
                 # Show the frame of video on the screen
-                cv2.imshow('Video', rgb_image)
+                # cv2.imshow('Video', rgb_image)
                 print('loop end', timeit.default_timer() - self.start_time)
 
             # Hit 'q' to quit
