@@ -1,34 +1,29 @@
 
 from urllib.request import urlopen
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 import random
 import numpy as np
 import cv2
+import re
 
 class ImageGrabber:
-    def __init__(self):
-        print ('hi')
+    imageUrl = ''
 
-    def getImage(self, url):
-        # html = urlopen(url)
-        # soup = BeautifulSoup(html, "html.parser")
-        #
-        # image = soup.find(alt="camera_image", src=True)
-        # if image is None:
-        #     print('No matching image found')
-        #     return
+    def __init__(self, url):
+        html = urlopen(url)
+        soup = BeautifulSoup(html, "html.parser")
 
-        imageSrc = 'http://207.251.86.238/cctv458.jpg' + '?math=' + str(random.random())
+        for script in soup(["script", "style"]):
+            if script.contents:
+                scriptContent = script.contents[0]
+                src = re.search("http(.*)jpg", scriptContent)
+                if src:
+                    self.imageUrl = src.group(0)
+                    break
 
-        print(imageSrc)
-
-        resp = urlopen(imageSrc)
+    def getImage(self):
+        resp = urlopen(self.imageUrl + '?math=' + str(random.random()))
         image = np.asarray(bytearray(resp.read()), dtype="uint8")
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
         return image
-
-        # image_link = image['src']
-        # filename = image_link.split('/')[-1]
-        #
-        # print (image_link, filename)
